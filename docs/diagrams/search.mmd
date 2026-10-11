@@ -1,0 +1,15 @@
+flowchart TD
+    S[search term] --> V{搜索词非空? / Nonempty?}
+    V -- No --> ARG[ArgumentException]
+    V -- Yes --> API[OpenSearch API / action=opensearch]
+    API --> MODEL[SearchResults.fromJson]
+    MODEL --> L{im-feeling-lucky?}
+    L -- No --> LIST[输出标题和链接 / Print titles and URLs]
+    L -- Yes --> FIRST[取首个结果 / results.first]
+    FIRST --> SUMMARY[REST page summary API]
+    SUMMARY --> SM[Summary.fromJson]
+    SM --> PRINT[输出摘要 / Print summary]
+    PRINT --> LIST
+    FIRST -. 空结果 / Empty results .-> STATE[StateError / 当前未处理]
+    API -. HTTP or JSON error .-> CATCH[记录 HttpException 或 FormatException / Log and return message]
+    SUMMARY -. HTTP or JSON error .-> CATCH

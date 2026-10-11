@@ -1,0 +1,24 @@
+flowchart TB
+    U[用户 / User] --> E[cli/bin/cli.dart]
+    E --> L[日志初始化 / File logger]
+    E --> R[command_runner / Parse and dispatch]
+    R --> H[HelpCommand]
+    R --> S[SearchCommand]
+    R --> A[GetArticleCommand]
+    S --> WS[wikipedia.search]
+    S --> SUM[getArticleSummaryByTitle]
+    A --> WA[getArticleByTitle]
+    WS --> HTTP[http.Client / HTTPS]
+    SUM --> HTTP
+    WA --> HTTP
+    HTTP <--> W[en.wikipedia.org]
+    WS --> M[SearchResults / Summary / Article]
+    SUM --> M
+    WA --> M
+    H --> O[onOutput / console.write]
+    S --> O
+    A --> O
+    O --> T[终端 / Terminal]
+    S -. 异常 / Exceptions .-> L
+    A -. 异常 / Exceptions .-> L
+    L --> F[cli/logs/*.txt]

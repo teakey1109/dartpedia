@@ -1,0 +1,9 @@
+flowchart TD
+    A[article title] --> DEFAULT[缺省标题 cat / Default cat]
+    DEFAULT --> API[MediaWiki query / prop=extracts]
+    API --> MODEL[Article.listFromJson]
+    MODEL --> FIRST[取首篇文章 / articles.first]
+    FIRST --> TEXT[按空格切分取前 500 段 / First 500 space-separated tokens]
+    TEXT --> OUT[标题与正文输出 / Print title and extract]
+    FIRST -. 空列表 / Empty list .-> ERR[StateError / 当前未处理]
+    API -. HTTP or JSON error .-> CATCH[记录异常并返回消息 / Log and return message]

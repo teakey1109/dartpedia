@@ -1,0 +1,13 @@
+flowchart TD
+    IN[命令参数 / argv] --> INIT[初始化日志并注册三个命令 / Initialize and register]
+    INIT --> P[CommandRunner.parse]
+    P --> EMPTY{参数为空? / Empty?}
+    EMPTY -- Yes --> END[无输出返回 / Return silently]
+    EMPTY -- No --> VALID{首项为已注册命令? / Known command?}
+    VALID -- No --> ERR[ArgumentException]
+    VALID -- Yes --> SCAN[解析一个位置参数和选项 / Parse one argument and options]
+    SCAN --> BAD{未知选项或参数不合法? / Invalid input?}
+    BAD -- Yes --> ERR
+    BAD -- No --> RUN[await command.run]
+    RUN --> OUT[await onOutput / 逐行输出]
+    ERR --> LOG[onError / 记录并打印 Exception]
